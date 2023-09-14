@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { ThreadsProvider } from '../context/thread-context';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {useProductActions, useProductsInBasket} from '../store';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,6 +48,25 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const productsInBasket = useProductsInBasket();
+  const { addProductToBasket } = useProductActions();
+
+  React.useEffect(() => {
+    if(productsInBasket?.length < 1) {
+      addProductToBasket({
+        id: 1,
+        title: 'now',
+        price: 10000,
+        description: 'test',
+        category: 'test',
+        image: 'https://test.com',
+        rating: { rate: 1, count: 5 }
+      })
+    }
+  }, [productsInBasket?.length])
+
+  console.log("🚀 ~ file: _layout.tsx:52 ~ RootLayoutNav ~ productsInBasket:", productsInBasket)
+
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
